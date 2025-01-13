@@ -64,14 +64,14 @@ async def login(request: UpdatePassword, db=Depends(get_async_session)):
         raise HTTPException(status_code=401, detail=str(e))
 
 
-@router.get("/authorize")
+@router.post("/authorize")
 async def check_permissions(request: CheckPermissionsRequest, db=Depends(get_async_session)):
     if request.required_action == Action.QUERY.value and request.query is None:
         raise HTTPException(status_code=400, detail="Query parameter is required for 'query' action")
 
     auth_service = AuthService(db)
-    user_id = auth_service.verify_token(request.token)
-    if auth_service.check_permissions(user_id, request.required_action, request.targer_action, request.query):
+    user = auth_service.get_cognito_user(request.token)
+    if await auth_service.check_permissions(user, request.required_action, request.targer_action, request.query):
         return {"message": "Permission granted"}
     else:
         raise HTTPException(status_code=403, detail="Permission denied")

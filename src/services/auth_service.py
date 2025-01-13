@@ -5,6 +5,10 @@ import boto3
 import hashlib
 import hmac
 import base64
+from src.repositories.permissions import get_permisions
+from src.repositories.roles_permissions import get_roles_permisions
+from src.repositories.users import get_user
+from src.repositories.user_roles import get_user_roles
 from src.config import settings
 from botocore.exceptions import ClientError
 
@@ -92,35 +96,45 @@ class AuthService:
                     detail=str(e)
                 )
 
-    def get_cognito_jwk(self):
-        response = self.client_cognito.get_jwk(self.user_pool_id)
-        return response['keys']
 
-    def verify_token(self, token: str):
-        jwks = self.get_cognito_jwk()
+    def get_cognito_user(self, token: str):
         try:
-            payload = jwt.decode(token, jwks, algorithms=['RS256'], audience=self.client_id)
-            user_id = payload.get("sub")
-            if user_id is None:
-                raise HTTPException(status_code=401, detail="Invalid token")
-            return user_id
-        except JWTError:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            response = self.cognito_client.get_user(
+                AccessToken=token
+            )
+            return {
+                'username': response['Username'],
+                'user_attributes': {
+                    attr['Name']: attr['Value']
+                    for attr in response['UserAttributes']
+                }
+            }
+        except ClientError as e:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
+
 
     # def assign_role(self, user_id, role):
     #     self.db.users.update_one({"user_id": user_id}, {"$set": {"role": role}})
 
-    def check_permissions(self, user_id, required_action: str, target_action: str, query: str =None):
-        user = self.db.users.find_one({"user_id": user_id})
-        if user and user.get('role'):
-            # Aquí puedes agregar la lógica para verificar los permisos específicos del rol
-            # y la acción requerida, así como la consulta opcional.
-            # Por ejemplo:
-            role = user.get('role')
-            permissions = self.db.permissions.find_one({"role": role, "action": required_action})
-            if permissions:
-                if query:
-                    # Lógica adicional para validar la consulta
-                    pass
-                return True
+    async def check_permissions(self, user: dict, required_action: str, target_action: str, query: str =None):
+        email = user.get('user_attributes', {}).get('email')
+        user = await get_user(self.db, email)
+        user_roles = await get_user_roles(self.db, user_id=user.id)
+        if user and user_roles:
+            roles_ids = [role_id[0].role_id for role_id in user_roles]
+            roles_permissions_ids = await get_roles_permisions(self.db, roles_ids)
+            if roles_permissions_ids:
+                permissions_ids = [roles_permission_id[0].permission_id for roles_permission_id in roles_permissions_ids]
+                permissions = await get_permisions(self.db, permissions_ids)
+                for permission in permissions:
+                    if query:
+                        # Lógica adicional para validar queries
+                        pass
+                    if permission[0].name == required_action and permission[0].resource == target_action:
+                        return True
+                    else:
+                        return False
         return False
