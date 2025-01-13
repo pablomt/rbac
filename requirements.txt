@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+boto3
+python-jose
+python-dotenv
+pydantic_settings
+asyncpg
+pyhumps
