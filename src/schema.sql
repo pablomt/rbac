@@ -70,3 +70,12 @@ CREATE TABLE audit_logs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES users(id)
 );
+
+
+/*
+    select u.email, u.name, r.name, p.name, p.description, p.resource from users u
+    join user_roles ur on u.id = ur.user_id
+    join roles r on ur.role_id = r.id
+    left join role_permissions rp on r.id = rp.role_id
+    left join permissions p on rp.permission_id = p.id;
+*/

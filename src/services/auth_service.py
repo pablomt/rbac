@@ -33,9 +33,9 @@ class AuthService:
         ).digest()
         return base64.b64encode(dig).decode()
 
-    def update_pasword(self, username: str, session: str, new_password: str):
+    async def update_pasword(self, username: str, session: str, new_password: str):
         try:
-            response = self.cognito_client.respond_to_auth_challenge(
+            response = await self.cognito_client.respond_to_auth_challenge(
                 ClientId=self.client_id,
                 ChallengeName='NEW_PASSWORD_REQUIRED',
                 Session=session,
@@ -43,10 +43,10 @@ class AuthService:
                     'USERNAME': username,
                     'NEW_PASSWORD': new_password,
                     'SECRET_HASH': self.get_secret_hash(username),
-                    "userAttributes.nickname": "pablomt",
-                    "userAttributes.name": "Pablo",
-                    "userAttributes.given_name": "Moreno",
-                    "userAttributes.family_name": "Tepichin",
+                    # "userAttributes.nickname": "pablomt",
+                    # "userAttributes.name": "Pablo",
+                    # "userAttributes.given_name": "Moreno",
+                    # "userAttributes.family_name": "Tepichin",
 
                 }
             )

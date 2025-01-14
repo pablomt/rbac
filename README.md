@@ -1,32 +1,38 @@
-# Mi Microservicio de Control de Acceso
+# RBAC Microservice
 
-This project is a microservice developed in Python with the objective of implementing a Role-Based Access Control system. The primary goal is to manage and enforce access permissions based on roles assigned to users. The service provides secure and flexible access control for resources, ensuring that users can only perform actions permitted by role
+This project is a microservice developed in Python(FastAPI) with the objective of implementing a Role-Based Access Control system. The primary goal is to manage and enforce access permissions based on roles assigned to users. The service provides secure and flexible access control for resources, ensuring that users can only perform actions permitted by role
 
 
-## Estructura del Proyecto
+## Proyecto structure
 
 ```
 mi-microservicio
 ├── src
-│   ├── main.py                # Punto de entrada de la aplicación
+│   ├── main.py                # Entry point of application
+│   ├── config.py              # Settings file
 │   ├── models
-│   │   └── user_model.py       # Modelo de usuario
+│   │   └── user.py            # User model
+│   │   └── role.py            # Roles model
+│   │   └── ...                # extra models
 │   ├── routes
-│   │   └── auth_routes.py       # Configuración de rutas de autenticación
+│   │   └── auth_routes.py      # routes configuration
+│   ├── repositories
+│   │   └── permissions.py      # Queries to database
 │   ├── services
-│   │   └── auth_service.py      # Lógica de negocio de autenticación
+│   │   └── auth_service.py     # Business Auth logic
 │   └── utils
-│       └── db.py                # Funciones para manejo de base de datos
-├── requirements.txt             # Dependencias del proyecto
-└── README.md                    # Documentación del proyecto
+│       └── db.py                # Handler dabatase connection
+│       └── enums.py             # Enum classes
+├── requirements.txt             # Proyect dependencies
+└── README.md                    # Proyect documentation
 ```
 
-## Instalación
+## Intallation
 
 1. Clona el repositorio:
    ```
    git clone <URL_DEL_REPOSITORIO>
-   cd mi-microservicio
+   cd rbac
    ```
 
 2. Instala las dependencias:
@@ -47,11 +53,11 @@ mi-microservicio
 
 - **Login**
   - **Endpoint:** `/login`
-  - **Método:** POST
-  - **Cuerpo:** `{ "username": "usuario", "password": "contraseña" }`
+  - **Method:** POST
+  - **Body:** `{ "username": "usuario", "password": "contraseña" }`
 
-- **Verificar Permisos**
-  - **Endpoint:** `/check_permissions`
-  - **Método:** GET
-  - **Headers:** `Authorization: Bearer <token>`
+- **Check Permissions**
+  - **Endpoint:** `/authorize`
+  - **Método:** POST
+  - **Body:** `{ "token": "123", "requiredAction": "read", "targerAction": "delta_table", "query":  "SELECT * FROM delta_table" }`
 
