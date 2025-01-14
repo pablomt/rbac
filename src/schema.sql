@@ -73,6 +73,22 @@ CREATE TABLE audit_logs (
 
 
 /*
+    INSERTS
+    INSERT INTO users VALUES ('a659f134-7589-4616-bef1-74b96721295d', 'pablomorenotepichin', 'Pablo', 'Moreno', 'Tepichin', 'pmoretepi@gmail.com', 1, '2025-01-13 01:17:02.62471', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-13 01:17:02.62471', 'a659f134-7589-4616-bef1-74b96721295d');
+    INSERT INTO users VALUES ('df1435ca-4849-459f-9ca2-4da4c6ff7452', 'analista1', 'Analista', 'appellido', 'appellido 2', 'analista1@yopmail.com', 2, '2025-01-14 00:01:36.848462', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-14 00:01:36.848462', NULL);
+
+    INSERT INTO roles VALUES ('d3aa3898-94e0-4f73-8224-486f6da269d4', 'super_admin', 'Todos los privilegios', '2025-01-13 01:22:24.35443', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-13 01:22:24.35443', NULL);
+    INSERT INTO roles VALUES ('5113b585-5f31-4d26-a3fe-c8a6f3889a3d', 'analista_role', 'Permisos de lectura en delta table 2', '2025-01-14 00:03:02.780137', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-14 00:03:02.780137', NULL);
+
+    INSERT INTO user_roles VALUES ('85a03552-7dfe-4e96-85a4-386a7f41723f', 'a659f134-7589-4616-bef1-74b96721295d', 'd3aa3898-94e0-4f73-8224-486f6da269d4', '2025-01-13 01:23:52.769344', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-13 01:23:52.769344', NULL);
+    INSERT INTO user_roles VALUES ('27b79c76-fa23-4d50-bbe0-037ad5da164c', 'df1435ca-4849-459f-9ca2-4da4c6ff7452', '5113b585-5f31-4d26-a3fe-c8a6f3889a3d', '2025-01-14 00:08:28.988783', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-14 00:08:28.988783', NULL);
+
+    INSERT INTO permissions VALUES ('df9dd89a-9a31-4552-a3a0-bec52a1caa89', 'read', 'lectura', 'delta_table', '2025-01-13 01:24:38.139399', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-13 01:24:38.139399', NULL);
+    INSERT INTO permissions VALUES ('b015a695-50e0-4443-8a92-406b448c925b', 'read', 'lectura', 'delta_table_2', '2025-01-14 00:05:43.610455', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-14 00:05:43.610455', NULL);
+
+    INSERT INTO role_permissions VALUES ('1d644bef-ac51-41bf-b9f3-65d067c83bf0', 'd3aa3898-94e0-4f73-8224-486f6da269d4', 'df9dd89a-9a31-4552-a3a0-bec52a1caa89', '2025-01-13 01:25:49.887188', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-13 01:25:49.887188', NULL);
+    INSERT INTO role_permissions VALUES ('9cc03a59-8952-4415-9ca5-fe069e424770', '5113b585-5f31-4d26-a3fe-c8a6f3889a3d', 'b015a695-50e0-4443-8a92-406b448c925b', '2025-01-14 00:46:28.590821', 'a659f134-7589-4616-bef1-74b96721295d', '2025-01-14 00:46:28.590821', NULL);
+
     select u.email, u.name, r.name, p.name, p.description, p.resource from users u
     join user_roles ur on u.id = ur.user_id
     join roles r on ur.role_id = r.id
