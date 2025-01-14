@@ -3,7 +3,7 @@
 This project is a microservice developed in Python(FastAPI) with the objective of implementing a Role-Based Access Control system. The primary goal is to manage and enforce access permissions based on roles assigned to users. The service provides secure and flexible access control for resources, ensuring that users can only perform actions permitted by role
 
 
-## Proyecto structure
+## Proyect structure
 
 ```
 mi-microservicio
@@ -29,27 +29,27 @@ mi-microservicio
 
 ## Intallation
 
-1. Clona el repositorio:
+1. Clone the repositorie:
    ```
    git clone <URL_DEL_REPOSITORIO>
    cd rbac
    ```
 
-2. Instala las dependencias:
+2. Install of dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-## Uso
+## Use
 
-1. Inicia la aplicación:
+1. Start application
    ```
    uvicorn src.main:app --reload
    ```
 
-2. Accede a la API en `http://localhost:8000` (o el puerto que hayas configurado).
+2. Access to the API in `http://localhost:8000` (or on the configured port).
 
-## Ejemplos de API
+## API Examples
 
 - **Login**
   - **Endpoint:** `/login`
